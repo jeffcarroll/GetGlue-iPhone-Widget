@@ -40,7 +40,7 @@
 	if (objectKey != newObjectKey) {
 		[objectKey release];
 		objectKey = [newObjectKey copy];
-		[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/html/checkinMobile.html?objectId=%@#iphone", GETGLUE_POPUP_HOST, objectKey]]]];	
+		[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/html/checkinMobile.html?objectId=%@#iphone", GETGLUE_WIDGET_HOST, objectKey]]]];	
 	}
 }
 
