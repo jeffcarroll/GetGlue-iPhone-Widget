@@ -1,0 +1,4 @@
+*.DS_Store
+/examples/Example/Example.xcodeproj/*.pbxuser
+/examples/Example/Example.xcodeproj/*.perspectivev3
+/examples/Example/build/

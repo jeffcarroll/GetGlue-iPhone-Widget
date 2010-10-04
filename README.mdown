@@ -1,0 +1,109 @@
+GetGlue iPhone Check-in Widget
+==============================
+
+Objective-C wrapper for GetGlue Check-in widgets
+
+
+The simplest way to use the GetGlue Check-in widget is to simply add the code directly to your project. Check-in widgets can then be created either in interface boilder, or directly in code. You can see an example of both of these methods in the "Example" project which is provided. 
+
+Adding the code to your project
+-------------------------------
+
+1. Drag the entire "GetGlueWidget" in the src directory into your project
+
+2. If you do not want to maintain an external refference to the "GetGlueWidget" directory, you can check "Copy items into destination group's folder (if needed)" 
+	![Copy items dialog](http://cl.ly/7d53f2f6d4833a3682fa/content)
+	
+At this point, your project should compile successfuly, and you are ready to create a GetGlue widget in your application.
+	
+Creating a widget in code
+-------------------------
+1. include the GetGlue header
+
+		#import "GetGlueWidget.h"
+
+2. Create an instance of a GetGlue widget, setting the X and Y values where you would like your widget to appear (Note, GetGlue widgets are always 64x74, reguardles of what width and height are passed in here):
+
+		GetGlueWidgetView* gg2 = [[[GetGlueWidgetView alloc] initWithFrame:CGRectMake(20, 138, 64, 74)] autorelease];
+
+3. Set the objectKey of the widget to the GetGlue object key the widget should be associated with:
+
+		gg2.objectKey = @"tv_shows/true_blood";
+
+4. Add the widget to your view:
+
+		[self.view addSubview:gg2];
+	
+Creating a widget via interface builder
+---------------------------------------	
+Note: even with widgets created in interface builder, code is still needed to set the GetGlue object key with which the widget is associated.
+
+1. Open the xib file that contains the view where you would like your widget to appear
+
+2. Search for "GetGlue" in the "Classes" tab of the "Library" winodw
+
+	![GetGlue view](http://cl.ly/e64574d981ba99cd509c/content)
+	
+3. Drag an instance of "GetGlueWidgetView" into your view.
+
+4. With the new GetGlueWidgetView selected, set width to 64 and height to 74 in the "Size" tab of the inspector
+
+	![Size inspector](http://cl.ly/d3c6e13ff0f723e1c44a/content)
+	
+5. Position the view where you would like your widget to appear
+
+	![position widget](http://cl.ly/77fad5e630e8361b7f09/content)
+	
+6. You may wish to set the background color of your widget, or make it ransparent, you can do this from the "Attributes" tab of the inspector
+
+	![attributes](http://cl.ly/6be3d0cad88f0aac03d1/content)
+	
+7. Add an "GetGlueWidgetView" outlet to your xib's view controller (dont forget to import `GetGlueWidget.h`)
+
+		#import "GetGlueWidget.h"
+
+		@interface ExampleViewController : UIViewController {
+			GetGlueWidgetView* gg;
+		}
+		
+		@property (nonatomic, retain) IBOutlet GetGlueWidgetView *gg;
+		
+8. In interface builder select your nib's View Controller, and in the "Connections" tab of the inspector, drag a connection from your outlet to the view you created in step 3
+
+	![connect outlet](http://cl.ly/ecbccb52bc32ba36b2ba/content)
+	
+9. Set the widget's object key in your `viewDidLoad`
+
+		- (void)viewDidLoad {
+			[super viewDidLoad];
+			gg.objectKey = @"tv_shows/weeds";
+		}
+
+ 
+Advanced Fetaures
+=================
+
+The GetGlue check-in widget has several more advanced features, to help integrate the widget into your application, which can be accessed by implimenting the `GetGlueWidgetDelegate`. The `GetGlueWidgetDelegate` has several callbacks.
+
+- (void)widget:(GetGlueWidgetView*) widget didPerformCheckinForUser: (NSString*) username
+-----------------------------------------------------------------------------------------
+
+Called after a user checks-in. `username` will be the GetGlue username of the user who checked in. The objectKey can be obtained from the widget (`widget.objectKey`)
+ 
+
+- (void)widget:(GetGlueWidgetView*) widget didRecieveNewCheckinCount:(int) newCount
+-----------------------------------------------------------------------------------
+
+When the widget initially loads, or after a check-in, this method will be called with the number of total check-ins
+
+- (BOOL)widget:(GetGlueWidgetView*) widget shouldLaunchURL:(NSURL*) url
+-----------------------------------------------------------------------
+
+By default, external URLs (such as object pages on getglue.com) are loaded in safari. If you wish to load these in a webview within your own app, you may return `NO` in this delegate, and launch `url` onw your own.
+
+
+
+Getting Help
+============
+
+If you have any problems integrating GetGlue widgets into your project, you can post to the [GetGlue Development Group](http://groups.google.com/group/glue-development), or email us at support@getglue.com
