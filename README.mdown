@@ -12,6 +12,7 @@ Adding the code to your project
 1. Drag the entire "GetGlueWidget" in the src directory into your project
 
 2. If you do not want to maintain an external refference to the "GetGlueWidget" directory, you can check "Copy items into destination group's folder (if needed)" 
+
 	![Copy items dialog](http://cl.ly/7d53f2f6d4833a3682fa/content)
 	
 At this point, your project should compile successfuly, and you are ready to create a GetGlue widget in your application.
