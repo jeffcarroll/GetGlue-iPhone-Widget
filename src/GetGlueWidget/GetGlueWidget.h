@@ -6,8 +6,8 @@
 //
 
 #define GETGLUE_WIDGET_VERSION @"1_0"
-#define GETGLUE_WIDGET_HOST @"widgets.qa.getglue.com"
-#define GETGLUE_POPUP_HOST @"qa.getglue.com"
+#define GETGLUE_WIDGET_HOST @"widgets.getglue.com"
+#define GETGLUE_POPUP_HOST @"getglue.com"
 
 #import "GetGlueWidgetView.h"
 #import "GluePopup.h"
