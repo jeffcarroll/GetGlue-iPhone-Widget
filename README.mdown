@@ -4,7 +4,7 @@ GetGlue iPhone Check-in Widget
 Objective-C wrapper for GetGlue Check-in widgets
 
 
-The simplest way to use the GetGlue Check-in widget is to simply add the code directly to your project. Check-in widgets can then be created either in interface boilder, or directly in code. You can see an example of both of these methods in the "Example" project which is provided. 
+The simplest way to use the GetGlue Check-in widget is to simply add the code directly to your project. Check-in widgets can then be created either in interface builder, or directly in code. You can see an example of both of these methods in the "Example" project which is provided. 
 
 Adding the code to your project
 -------------------------------
