@@ -25,8 +25,16 @@
 
 @synthesize widget;
 
+BOOL ggIsPad() {
+	#ifdef UI_USER_INTERFACE_IDIOM
+		return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+	#else
+		return NO;
+	#endif
+}
+
 - (id) init {
-	CGRect rect = CGRectMake(3, 23, 314, 454);
+	CGRect rect = ggIsPad() ? CGRectMake(3, 23, 487, 760) : CGRectMake(3, 23, 314, 454);
 	self = [super initWithFrame: rect];
 	if (self != nil) {
 		self.backgroundColor = [UIColor clearColor];
@@ -34,6 +42,13 @@
 		webview = [[[UIWebView alloc] initWithFrame:CGRectMake(10, 47, rect.size.width-20, rect.size.height-72)] autorelease];
 		webview.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
 		webview.delegate = self;
+		
+		if(ggIsPad()){
+		for (id subview in webview.subviews)
+			if ([[subview class] isSubclassOfClass: [UIScrollView class]])
+				((UIScrollView *)subview).scrollEnabled = NO;
+		}
+		
 		[self addSubview:webview];
 		
 		loadingSpinner = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
@@ -52,6 +67,8 @@
 
 
 -(void) dealloc {
+	webview.delegate = nil;
+    [webview stopLoading];
     [super dealloc];
 }
 
@@ -134,14 +151,25 @@
 	}
 }
 
+- (BOOL)shouldRotateToOrientation:(UIDeviceOrientation)orientation {
+	if (orientation == currentOrientation) {
+		return NO;
+	} else {
+		return orientation == UIDeviceOrientationLandscapeLeft
+		|| orientation == UIDeviceOrientationLandscapeRight
+		|| orientation == UIDeviceOrientationPortrait
+		|| orientation == UIDeviceOrientationPortraitUpsideDown;
+	}
+}
+
 - (void)setSizeForOrientation: (BOOL) animate {
 	UIDeviceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+	currentOrientation = orientation;
 	
 	CGRect screenFrame = [UIScreen mainScreen].applicationFrame;
 	CGPoint center = CGPointMake(
 								 screenFrame.origin.x + ceil(screenFrame.size.width/2),
 								 screenFrame.origin.y + ceil(screenFrame.size.height/2));
-	
 	if (animate) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration];
@@ -150,16 +178,21 @@
 	self.transform = [self transformForOrientation];
 	CGRect newSize;
 	if (UIInterfaceOrientationIsLandscape(orientation)) {
-		newSize = CGRectMake(3, 23, 300, 314);
-		webview.frame = CGRectMake(10, 47, newSize.size.width-6, newSize.size.height-86);
-		loadingSpinner.center = CGPointMake(center.x, center.y-80);
+		newSize = ggIsPad() ? CGRectMake(3, 23, 487, 760) : CGRectMake(3, 23, 300, 314);
+		self.frame = newSize;
+		if(ggIsPad()){ center.x -= 0.5; }
+		self.center = center;
+		webview.frame = CGRectMake(10, 47, newSize.size.height-20, newSize.size.width-72);
+		closeBtn.frame = CGRectMake(newSize.size.height-32, 21, 14, 14);
 	} else {
-		newSize = CGRectMake(3, 23, 314, 454);
+		newSize = ggIsPad() ? CGRectMake(3, 23, 760, 487) : CGRectMake(3, 23, 314, 454);
+		self.frame = newSize;
+		if(ggIsPad()){ center.y -= 0.5; }
+		self.center = center;
 		webview.frame = CGRectMake(10, 47, newSize.size.width-20, newSize.size.height-72);
-		loadingSpinner.center = CGPointMake(center.x, center.y-25);
+		closeBtn.frame = CGRectMake(newSize.size.width-35, 21, 14, 14);
 	}
-	self.frame = newSize;
-	self.center = center;
+	loadingSpinner.center = webview.center;
 	
 	if (animate) {
 		[UIView commitAnimations];
@@ -169,7 +202,9 @@
 }
 
 - (void)orientationDidChange:(void*)object {
-	[self setSizeForOrientation:YES];
+	if ([self shouldRotateToOrientation:[UIApplication sharedApplication].statusBarOrientation]) {
+		[self setSizeForOrientation:YES];
+	}
 }
 
 - (void)phase2 {
@@ -201,7 +236,7 @@
 	
 	[loadingSpinner startAnimating];
 	[webview setHidden:YES];
-	[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/widget/checkin?style=mobile&app=mobileWidget_%@&%@",GETGLUE_POPUP_HOST, GETGLUE_WIDGET_VERSION, params]]]];	
+	[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/widget/checkin?style=%@&app=mobileWidget_%@&%@", GETGLUE_POPUP_HOST, ggIsPad() ? @"tablet" : @"mobile",  GETGLUE_WIDGET_VERSION, params]]]];	
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -213,6 +248,7 @@
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
 	NSURL *url = request.URL;
 	NSString *urlString = url.absoluteString;
+	//NSLog(urlString);
 	if ([urlString hasPrefix:@"getglue://userDidCheckin"]) {
 		NSString *params = url.query;
 		[self.widget didPerformCheckinForUser:params]; 	
@@ -222,11 +258,13 @@
 		  [urlString rangeOfString:@"getglue.com/verifyService/"].location == NSNotFound && 
 		  [urlString rangeOfString:@"facebook.com/"].location == NSNotFound && 
 		  [urlString rangeOfString:@"twitter.com/"].location == NSNotFound ) {
+		NSLog(@"external URL detected");
 		BOOL launchInSafari = true;
 		if([self.widget.delegate respondsToSelector:@selector(widget:shouldLaunchURL:)]) {
 			launchInSafari = [self.widget.delegate widget:self.widget shouldLaunchURL:url];
 		}
 		if(launchInSafari){
+			NSLog(@"launching safari");
 			[[UIApplication sharedApplication] openURL:url];
 		}
 		return NO;

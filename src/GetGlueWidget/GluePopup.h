@@ -24,6 +24,7 @@
 	UIButton* closeBtn;
 	UIActivityIndicatorView* loadingSpinner;
 	GetGlueWidgetView* widget;
+	UIDeviceOrientation currentOrientation;
 }
 
 @property(nonatomic,assign) GetGlueWidgetView* widget;
