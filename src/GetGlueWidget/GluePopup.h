@@ -25,6 +25,7 @@
 	UIActivityIndicatorView* loadingSpinner;
 	GetGlueWidgetView* widget;
 	UIDeviceOrientation currentOrientation;
+	UIView* overlay;
 }
 
 @property(nonatomic,assign) GetGlueWidgetView* widget;

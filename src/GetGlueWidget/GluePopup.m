@@ -56,7 +56,7 @@ BOOL ggIsPad() {
 		
 		closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 		[closeBtn setImage:[UIImage imageNamed:@"GetGlueWidget.bundle/getglue_close.png"] forState:UIControlStateNormal];
-		closeBtn.frame = CGRectMake(rect.size.width-35, 21, 14, 14);
+		closeBtn.frame = CGRectMake(rect.size.width-45, 11, 35, 35);
 		[closeBtn addTarget:self action:@selector(closePopup:) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:closeBtn];
 		
@@ -128,6 +128,7 @@ BOOL ggIsPad() {
 	[UIView setAnimationDuration:0.3];
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationDidStopSelector:@selector(cleanup)];
+	overlay.alpha = 0;
 	self.alpha = 0;
 	[UIView commitAnimations];
 }
@@ -135,6 +136,7 @@ BOOL ggIsPad() {
 - (void)cleanup {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceOrientationDidChangeNotification" object:nil];
 	[self removeFromSuperview];
+	[overlay removeFromSuperview];
 }
 
 
@@ -183,14 +185,14 @@ BOOL ggIsPad() {
 		if(ggIsPad()){ center.x -= 0.5; }
 		self.center = center;
 		webview.frame = CGRectMake(10, 47, newSize.size.height-20, newSize.size.width-72);
-		closeBtn.frame = CGRectMake(newSize.size.height-32, 21, 14, 14);
+		closeBtn.frame = CGRectMake(newSize.size.height-45, 11, 35, 35);
 	} else {
 		newSize = ggIsPad() ? CGRectMake(3, 23, 760, 487) : CGRectMake(3, 23, 314, 454);
 		self.frame = newSize;
 		if(ggIsPad()){ center.y -= 0.5; }
 		self.center = center;
 		webview.frame = CGRectMake(10, 47, newSize.size.width-20, newSize.size.height-72);
-		closeBtn.frame = CGRectMake(newSize.size.width-35, 21, 14, 14);
+		closeBtn.frame = CGRectMake(newSize.size.width-45, 11, 35, 35);
 	}
 	loadingSpinner.center = webview.center;
 	
@@ -219,6 +221,13 @@ BOOL ggIsPad() {
 	if (!window) {
 		window = [[UIApplication sharedApplication].windows objectAtIndex:0];
 	}
+	
+	overlay = [[[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
+	overlay.alpha = 0;
+	overlay.backgroundColor = [UIColor blackColor];
+	[window addSubview: overlay];
+	
+	
 	[window addSubview:self];
 	
 	
@@ -227,6 +236,7 @@ BOOL ggIsPad() {
 	[UIView setAnimationDuration:0.2];
 	[UIView setAnimationDelegate:self];
 	[UIView setAnimationDidStopSelector:@selector(phase2)];
+	overlay.alpha = 0.25;
 	self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
 	[UIView commitAnimations];
 	
