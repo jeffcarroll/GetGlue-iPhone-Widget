@@ -13,7 +13,7 @@ Adding the code to your project
 
 2. If you do not want to maintain an external refference to the "GetGlueWidget" directory, you can check "Copy items into destination group's folder (if needed)" 
 
-	![Copy items dialog](http://cl.ly/7d53f2f6d4833a3682fa/content)
+	![Copy items dialog](http://glueimg.s3.amazonaws.com/widgets/docs/1.png)
 	
 At this point, your project should compile successfuly, and you are ready to create a GetGlue widget in your application.
 	
@@ -43,21 +43,21 @@ Note: even with widgets created in interface builder, code is still needed to se
 
 2. Search for "GetGlue" in the "Classes" tab of the "Library" winodw
 
-	![GetGlue view](http://cl.ly/e64574d981ba99cd509c/content)
+	![GetGlue view](http://glueimg.s3.amazonaws.com/widgets/docs/2.png)
 	
 3. Drag an instance of "GetGlueWidgetView" into your view.
 
 4. With the new GetGlueWidgetView selected, set width to 64 and height to 74 in the "Size" tab of the inspector
 
-	![Size inspector](http://cl.ly/d3c6e13ff0f723e1c44a/content)
+	![Size inspector](http://glueimg.s3.amazonaws.com/widgets/docs/3.png)
 	
 5. Position the view where you would like your widget to appear
 
-	![position widget](http://cl.ly/77fad5e630e8361b7f09/content)
+	![position widget](http://glueimg.s3.amazonaws.com/widgets/docs/4.png
 	
 6. You may wish to set the background color of your widget, or make it ransparent, you can do this from the "Attributes" tab of the inspector
 
-	![attributes](http://cl.ly/6be3d0cad88f0aac03d1/content)
+	![attributes](http://glueimg.s3.amazonaws.com/widgets/docs/5.png)
 	
 7. Add an "GetGlueWidgetView" outlet to your xib's view controller (dont forget to import `GetGlueWidget.h`)
 
@@ -71,7 +71,7 @@ Note: even with widgets created in interface builder, code is still needed to se
 		
 8. In interface builder select your nib's View Controller, and in the "Connections" tab of the inspector, drag a connection from your outlet to the view you created in step 3
 
-	![connect outlet](http://cl.ly/ecbccb52bc32ba36b2ba/content)
+	![connect outlet](http://glueimg.s3.amazonaws.com/widgets/docs/6.png)
 	
 9. Set the widget's object key in your `viewDidLoad`
 
