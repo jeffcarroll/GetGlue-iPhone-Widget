@@ -23,10 +23,12 @@
 	id<GetGlueWidgetDelegate> delegate;
 	UIWebView* webview;
 	NSString* objectKey;
+	NSString* source;
 }
 
 @property (nonatomic,assign) id<GetGlueWidgetDelegate> delegate;
 @property (copy) NSString* objectKey;
+@property (copy) NSString* source;
 
 // private
 - (void) doPostInit;

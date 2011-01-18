@@ -77,7 +77,14 @@ Note: even with widgets created in interface builder, code is still needed to se
 
 		- (void)viewDidLoad {
 			[super viewDidLoad];
-			gg.objectKey = @"tv_shows/weeds";
+			gg.objectKey = @"tv_shows/true_blood";
+		}
+at this point you may also set a custom source url that will be linked back to from the GetGlue stream. When setting source, be sure to set it before setting object key, like so:
+
+		- (void)viewDidLoad {
+			[super viewDidLoad];
+			gg.source = @"http://www.hbo.com/true-blood/";
+			gg.objectKey = @"tv_shows/true_blood";
 		}
 
  

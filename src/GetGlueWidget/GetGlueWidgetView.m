@@ -18,7 +18,7 @@
 
 @implementation GetGlueWidgetView
 
-@synthesize delegate, objectKey;
+@synthesize delegate, objectKey, source;
 
 - (id) initWithFrame:(CGRect)frame
 {
@@ -30,6 +30,7 @@
 }
 
 -(void) doPostInit {
+	source = @"";
 	self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, 64, 74);
 	webview = [[[UIWebView alloc] initWithFrame:self.bounds] autorelease];
 	webview.delegate = self;
@@ -49,7 +50,17 @@
 	if (objectKey != newObjectKey) {
 		[objectKey release];
 		objectKey = [newObjectKey copy];
-		[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/html/checkinMobile.html?objectId=%@#iphone", GETGLUE_WIDGET_HOST, objectKey]]]];	
+		[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/html/checkinMobile.html?objectId=%@#%@", GETGLUE_WIDGET_HOST, objectKey,source]]]];	
+	}
+}
+
+-(void)setSource: (NSString*) newSource {    
+	if (source != newSource) {
+		[source release];
+		source = (NSString*)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)newSource, NULL, CFSTR("'\"?=&+<>;:-"), kCFStringEncodingUTF8);
+		if(objectKey) {
+			[webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString: [NSString stringWithFormat: @"http://%@/html/checkinMobile.html?objectId=%@#%@", GETGLUE_WIDGET_HOST, objectKey,source]]]];
+		}
 	}
 }
 

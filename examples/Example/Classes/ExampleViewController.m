@@ -44,7 +44,8 @@
 	gg.objectKey = @"tv_shows/weeds";
 	
 	GetGlueWidgetView* gg2 = [[[GetGlueWidgetView alloc] initWithFrame:CGRectMake(20, 110, 64, 74)] autorelease];
-	gg2.objectKey = @"tv_shows/true_blood";
+	gg2.source = @"http://www.hbo.com/true-blood/"; // When setting a custom source, always set it before objectKey
+	gg2.objectKey = @"tv_shows/true_blood"; // Setting objectKey will start the webview loading
 	[self.view addSubview:gg2];
 }
 
